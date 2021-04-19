@@ -16,11 +16,13 @@ git clone https://github.com/ahugla/Docaposte.git
 
 
 # CREATE ENV
-kubectl create -f /tmp/Docaposte/lamp-k8s-namespace.yaml
+kubectl create -f /tmp/Docaposte/k8s/lamp-k8s-namespace.yaml
 sleep 3
-kubectl apply -f php-content-configmap.yaml
-kubectl apply -f apache-configmap.yaml
-kubectl apply -f php-fpm-deployment.yaml
-kubectl apply -f apache-deployment.yaml
-kubectl apply -f php-fpm-service.yaml
-kubectl apply -f apache-service.yaml
+kubectl apply -f /tmp/Docaposte/k8s
+
+#kubectl apply -f php-content-configmap.yaml
+#kubectl apply -f apache-configmap.yaml
+#kubectl apply -f php-fpm-deployment.yaml
+#kubectl apply -f apache-deployment.yaml
+#kubectl apply -f php-fpm-service.yaml
+#kubectl apply -f apache-service.yaml
