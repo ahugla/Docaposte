@@ -15,9 +15,10 @@ rm -rf /tmp/Docaposte
 git clone https://github.com/ahugla/Docaposte.git
 
 
-
 # CREATE ENV
 kubectl create -f lamp-k8s-namespace.yaml
+sleep 3
+
 kubectl apply -f /tmp/Docaposte/k8s
 
 
