@@ -23,8 +23,8 @@ data:
       $time = $time[1] + $time[0];
       $start = $time;
     
-    //  for($i = 0; $i < 10; $i++) {
-      for($i = 0; $i < 10000000; $i++) {
+      for($i = 0; $i < 10; $i++) {
+      //for($i = 0; $i < 10000000; $i++) {
          $a = log1p(cosh(log1p($i)));
       }
     
@@ -42,19 +42,20 @@ data:
     //-----------------------------------------------------------------------------
     
     echo "<p>\n";
-    /*
+    
     require 'aws/aws-autoloader.php';
     use Aws\S3\S3Client;
     
         $bucket = 'testndc';
         $fichier = 'stockage_objet_NDC.txt';
-        $clef_API = 'ma_clef_API';
-        $secret_API = 'mon_secret_API';
+        $clef_API = 'minioadmin';
+        $secret_API = '$${mon_secret_API}';
     
     try {
         $s3 = new S3Client([
-            'region' => 'eu-west-3',
-            'version' => '2006-03-01',
+            'region' => '',
+            'version' => 'latest',
+            'endpoint' => 'http://$${MINIO_IP}:9000',
             'credentials' => [
                 'key'    => $clef_API ,
                 'secret' => $secret_API ,
@@ -69,8 +70,8 @@ data:
     }
     
     echo "Contenu du stockage objet :\n".$contenu['Body']." :)\n";
-    */
-    echo "Contenu du stockage objet :\nÀ définir :/\n";
+    
+    //echo "Contenu du stockage objet :\nÀ définir :/\n";
     echo "</p>\n";
     
     //------------------------------------------------------------------------------
@@ -84,7 +85,7 @@ data:
     
     echo "<p>\n";
     $serveur = 'lamp-mysql';
-    $user = 'root';
+    $user = 'testndcuser';
     $password = 'mysqlpass';
     $base = 'testndc';
     
