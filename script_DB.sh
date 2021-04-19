@@ -11,12 +11,7 @@ DB_password=$1
 echo "DB_password = " $DB_password
 
 
-
-# recup du repo git
-cd /tmp/
-git clone https://github.com/ahugla/test-bidouille.git
-#git clone https://github.com/ympondaven/POCNDC.git
-
+cd /tmp
 
 
 # install MySLQ
@@ -24,9 +19,6 @@ yum install -y  git wget vim mariadb-server
 systemctl start mariadb
 systemctl enable mariadb
 
-
-# Allow remote connections
-/etc/mysql/mysql.conf.d/mysqld.cnf
 
 
 # set password
@@ -57,7 +49,7 @@ EOF
 
 
 # create base et populate
-mysql  --defaults-extra-file=/var/lib/mysql/extra  < /tmp/test-bidouille/testDoca/dump_testndc.sql
+mysql  --defaults-extra-file=/var/lib/mysql/extra  < /tmp/Docaposte/dump_testndc.sql
 #mysql -u root -p
 #USE testndc;
 #SHOW TABLES;
