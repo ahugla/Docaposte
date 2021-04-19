@@ -49,13 +49,13 @@ data:
         $bucket = 'testndc';
         $fichier = 'stockage_objet_NDC.txt';
         $clef_API = 'minioadmin';
-        $secret_API = '$${mon_secret_API}';
+        $secret_API = 'VMware1!';
     
     try {
         $s3 = new S3Client([
             'region' => '',
             'version' => 'latest',
-            'endpoint' => 'http://$${MINIO_IP}:9000',
+            'endpoint' => 'http://10.11.10.25:9000',
             'credentials' => [
                 'key'    => $clef_API ,
                 'secret' => $secret_API ,
