@@ -69,10 +69,13 @@ data:
     //--------- Modifiez ici le code pour l'accès au stockage objet local ---------
     //-----------------------------------------------------------------------------
 
-    echo "<p>\n";
-    require '/aws/aws.phar';
-    use Aws\S3\S3Client;
 
+    echo "UN";
+    echo "<p>\n";
+    echo "DEUX";
+    require '/aws/aws.phar';
+    echo "TROIS";
+    use Aws\S3\S3Client;
         $bucket = 'testndc';
         $fichier = 'stockage_objet_NDC.txt';
         $clef_API = file_get_contents('/etc/secrets/s3-access-key');
