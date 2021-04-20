@@ -20,7 +20,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: alexfr75/php-fpm:1.0
+      - image: bitnami/apache:2.4
         name: lamp-apache
         ports:
         - containerPort: 8080
