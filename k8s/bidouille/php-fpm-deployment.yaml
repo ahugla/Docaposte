@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: lamp-php-fpm
+  namespace: lamp-k8s
   labels:
     app: lamp-php-fpm
 spec:
