@@ -194,5 +194,4 @@ spec:
       volumes:
       - configMap:
           name: php-content
-        name: lamp-phpcontent
-
+        
