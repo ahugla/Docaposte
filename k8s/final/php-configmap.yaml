@@ -91,7 +91,7 @@ data:
     $serveur = '10.11.10.28';
     $user = 'root';
     $password = 'VMware1!';
-    $base = 'testndc';
+    $base = 'testndcuser';
 
     // Create connection
     $mysql = new mysqli($serveur, $user, $password, $base);
