@@ -20,7 +20,7 @@ spec:
         tier: backend
     spec:
       containers:
-      - image: alexandreroman/ndc-php
+      - image: bitnami/php-fpm:8.0
         name: lamp-php-fpm
         ports:
         - containerPort: 9000
