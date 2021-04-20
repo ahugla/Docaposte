@@ -88,9 +88,9 @@ data:
     //------------------------------------------------------------------------------
 
     echo "<p>\n";
-    $serveur = 'lamp-mysql';
+    $serveur = '10.11.10.28';
     $user = 'root';
-    $password = file_get_contents('/etc/secrets/db');
+    $password = 'VMware1!';
     $base = 'testndc';
 
     // Create connection
