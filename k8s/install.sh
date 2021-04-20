@@ -19,3 +19,8 @@ git clone https://github.com/ahugla/Docaposte.git
 kubectl apply -f /tmp/Docaposte/k8s/lamp-k8s-namespace.yaml
 sleep 3
 kubectl apply -f /tmp/Docaposte/k8s
+
+
+# INFOS
+kubectl get service -n lamp-k8s | grep LoadBalancer
+kubectl get pod -n lamp-k8s | grep php
