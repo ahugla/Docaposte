@@ -1,0 +1,218 @@
+apiVersion: v1
+data:
+  apache.conf: |
+    LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so
+    <VirtualHost *:8080>
+      DocumentRoot "/app"
+      ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://lamp-php-fpm:9000/app/$1
+      RedirectMatch 204 /healthcheck.html
+      <Directory "/app">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+        DirectoryIndex poc.php
+      </Directory>
+    </VirtualHost>
+kind: ConfigMap
+metadata:
+  name: apache-conf
+  namespace: ndc-app2
+---
+apiVersion: v1
+data:
+  healthcheck.html: |
+    <html>
+      <head><title>Up and running</title></head>
+      <body>I'm alive</body>
+    </html>
+kind: ConfigMap
+metadata:
+  name: apache-healthcheck
+  namespace: ndc-app2
+---
+apiVersion: v1
+data:
+  benoit.php: |
+    <html>
+    <head>
+    </head>
+    <body>
+    <h1>Hello, Benoit !</h1>
+    </body>
+    </html>
+  poc.php: |
+    <html>
+    <head>
+    </head>
+    <body>
+    <h1>Hello, world !</h1>
+    <?php
+      echo "<p>\n";
+      echo "Nous nous trouvons sur l'instance <b>".gethostname()."</b>.\n";
+      echo "</p>\n";
+
+      echo "<p>\n";
+      echo "Lancement de la boucle de calcul... ";
+
+      $time = microtime();
+      $time = explode(' ', $time);
+      $time = $time[1] + $time[0];
+      $start = $time;
+
+      for($i = 0; $i < 10; $i++) {
+    //  for($i = 0; $i < 10000000; $i++) {
+          $a = log1p(cosh(log1p($i)));
+      }
+
+      $time = microtime();
+      $time = explode(' ', $time);
+      $time = $time[1] + $time[0];
+      $finish = $time;
+      $total_time = round(($finish - $start), 3);
+
+      echo "boucle de calcul terminée à ".date('H:i:s')." en ".$total_time."s !\n";
+      echo "</p>\n";
+
+    //-----------------------------------------------------------------------------
+    //--------- Modifiez ici le code pour l'accès au stockage objet local ---------
+    //-----------------------------------------------------------------------------
+
+    echo "<p>\n";
+    require '/aws/aws.phar';
+    use Aws\S3\S3Client;
+
+        $bucket = 'testndc';
+        $fichier = 'stockage_objet_NDC.txt';
+        $clef_API = file_get_contents('/etc/secrets/s3-access-key');
+        $secret_API = file_get_contents('/etc/secrets/s3-secret-key');
+
+    try {
+        $s3 = new S3Client([
+            'region' => 'eu-west-3',
+            'version' => 'latest',
+            'endpoint' => 'http://lamp-minio:9000',
+            'use_path_style_endpoint' => true,
+            'credentials' => [
+                'key'    => $clef_API ,
+                'secret' => $secret_API ,
+            ],
+        ]);
+        $contenu = $s3->getObject(array(
+            'Bucket' => $bucket,
+            'Key' => $fichier,
+        ));
+    } catch (Exception $e) {
+        $contenu = $e->getMessage() . "\n";
+    }
+
+    echo "Contenu du stockage objet :\n".$contenu['Body']." :)\n";
+
+    //echo "Contenu du stockage objet :\nÀ définir :/\n";
+    echo "</p>\n";
+
+    //------------------------------------------------------------------------------
+    //--------- Fin de modification du code pour l'accès au stockage objet ---------
+    //------------------------------------------------------------------------------
+
+
+    //------------------------------------------------------------------------------
+    //----------- Modifiez ici le code pour l'accès à la base de données -----------
+    //------------------------------------------------------------------------------
+
+    echo "<p>\n";
+    $serveur = 'lamp-mysql';
+    $user = 'root';
+    $password = file_get_contents('/etc/secrets/db');
+    $base = 'testndc';
+
+    // Create connection
+    $mysql = new mysqli($serveur, $user, $password, $base);
+
+    // Check connection
+    if ($mysql->connect_error) {
+        echo ("Connexion BDD KO : " . $mysql->connect_error);
+    } else {
+        echo "Connexion BDD OK !<br />\n";
+        $mysql->real_query("SELECT prenom, nom FROM contenu_base_testndc");
+        $resultat = $mysql->use_result();
+
+        echo "Contenu de la base SQL :<br />\n";
+        while ($row = $resultat->fetch_assoc()) {
+            echo $row['prenom']." ".$row['nom']."<br />\n";
+        }
+    }
+    echo "</p>\n";
+
+    //-----------------------------------------------------------------------------
+    //------- Fin de modification du code pour l'accès à la base de données -------
+    //-----------------------------------------------------------------------------
+
+    ?>
+    </body>
+    </html>
+kind: ConfigMap
+metadata:
+  name: php-content
+  namespace: ndc-app2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: lamp-php-fpm
+  name: lamp-php-fpm
+  namespace: ndc-app2
+spec:
+  ports:
+  - port: 9000
+  selector:
+    app: lamp-php-fpm
+    tier: backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: lamp-php-fpm
+  name: lamp-php-fpm
+  namespace: ndc-app2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lamp-php-fpm
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: lamp-php-fpm
+        tier: backend
+    spec:      
+      containers:
+      - image: alexandreroman/ndc-php@sha256:3aa56f1107b925e56fff23003a6ee5fb905646b63de914fa8bafd150df27d65f
+        name: lamp-php-fpm
+        ports:
+        - containerPort: 9000
+          name: lamp-php-fpm
+        volumeMounts:
+        - mountPath: /app
+          name: lamp-phpcontent
+        - mountPath: /etc/secrets/db
+          name: db-secrets
+          subPath: mysql-root-password
+        - mountPath: /etc/secrets/s3-access-key
+          name: s3-secrets
+          subPath: access-key
+        - mountPath: /etc/secrets/s3-secret-key
+          name: s3-secrets
+          subPath: secret-key
+      volumes:
+      - configMap:
+          name: php-content
+        name: lamp-phpcontent
+      - name: db-secrets
+        secret:
+          secretName: lamp-mysql
+      - name: s3-secrets
+        secret:
+          secretName: lamp-minio
