@@ -16,7 +16,7 @@ data:
 kind: ConfigMap
 metadata:
   name: apache-conf
-  namespace: ndc-app2
+  namespace: lamp-k8s
 ---
 apiVersion: v1
 data:
@@ -28,18 +28,10 @@ data:
 kind: ConfigMap
 metadata:
   name: apache-healthcheck
-  namespace: ndc-app2
+  namespace: lamp-k8s
 ---
 apiVersion: v1
 data:
-  benoit.php: |
-    <html>
-    <head>
-    </head>
-    <body>
-    <h1>Hello, Benoit !</h1>
-    </body>
-    </html>
   poc.php: |
     <html>
     <head>
@@ -153,7 +145,7 @@ data:
 kind: ConfigMap
 metadata:
   name: php-content
-  namespace: ndc-app2
+  namespace: lamp-k8s
 ---
 apiVersion: v1
 kind: Service
@@ -161,13 +153,14 @@ metadata:
   labels:
     app: lamp-php-fpm
   name: lamp-php-fpm
-  namespace: ndc-app2
+  namespace: lamp-k8s
 spec:
   ports:
   - port: 9000
   selector:
     app: lamp-php-fpm
     tier: backend
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -175,7 +168,7 @@ metadata:
   labels:
     app: lamp-php-fpm
   name: lamp-php-fpm
-  namespace: ndc-app2
+  namespace: lamp-k8s
 spec:
   replicas: 1
   selector:
@@ -198,21 +191,8 @@ spec:
         - mountPath: /app
           name: lamp-phpcontent
         - mountPath: /etc/secrets/db
-          name: db-secrets
-          subPath: mysql-root-password
-        - mountPath: /etc/secrets/s3-access-key
-          name: s3-secrets
-          subPath: access-key
-        - mountPath: /etc/secrets/s3-secret-key
-          name: s3-secrets
-          subPath: secret-key
       volumes:
       - configMap:
           name: php-content
         name: lamp-phpcontent
-      - name: db-secrets
-        secret:
-          secretName: lamp-mysql
-      - name: s3-secrets
-        secret:
-          secretName: lamp-minio
+
