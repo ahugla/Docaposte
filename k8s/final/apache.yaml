@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/instance: lamp-apache
     app.kubernetes.io/managed-by: Helm
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: http
       port: 80
@@ -39,7 +39,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: apache
       app.kubernetes.io/instance: lamp-apache
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
