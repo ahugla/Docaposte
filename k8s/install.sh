@@ -22,5 +22,6 @@ kubectl apply -f /tmp/Docaposte/k8s
 
 
 # INFOS
+sleep 3
 kubectl get service -n lamp-k8s | grep LoadBalancer
-kubectl get pod -n lamp-k8s | grep php
+kubectl get pod -n lamp-k8s -o wide | grep php
