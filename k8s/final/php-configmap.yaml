@@ -53,6 +53,7 @@ data:
         $clef_API = 'minioadmin';
         $secret_API = 'VMware1!';
 
+    echo "QUATRE";
     try {
         $s3 = new S3Client([
             'region' => '',
