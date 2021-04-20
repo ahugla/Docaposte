@@ -190,8 +190,8 @@ spec:
         volumeMounts:
         - mountPath: /app
           name: lamp-phpcontent
-        - mountPath: /etc/secrets/db
       volumes:
-      - configMap:
+      - name: lamp-phpcontent
+        configMap:
           name: php-content
         
