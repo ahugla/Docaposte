@@ -49,7 +49,7 @@ EOF
 
 
 # create base et populate
-mysql  --defaults-extra-file=/var/lib/mysql/extra  < /tmp/Docaposte/dump_testndc.sql
+mysql  --defaults-extra-file=/var/lib/mysql/extra  < /tmp/Docaposte/ArchiHybride-VMs-K8S/dump_testndc.sql
 #mysql -u root -p
 #USE testndc;
 #SHOW TABLES;
