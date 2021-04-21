@@ -30,7 +30,7 @@ mkdir /data
 
 # create content bucket et file for test
 mkdir /data/testndc
-cp /tmp/Docaposte/stockage_objet_NDC.txt /data/testndc/
+cp /tmp/Docaposte/ArchiHybride-VMs-K8S/stockage_objet_NDC.txt /data/testndc/
 
 
 
