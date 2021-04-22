@@ -2,7 +2,7 @@
     <head>
     </head>
     <body>
-    <h1>Hello, world ! Version: 1.5</h1>
+    <h1>Hello, world ! Version: 1.6</h1>
     <?php
       echo "<p>\n";
       echo "Nous nous trouvons sur l'instance <b>".gethostname()."</b>.\n";
